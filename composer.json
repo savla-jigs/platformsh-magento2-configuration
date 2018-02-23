@@ -1,5 +1,5 @@
 {
-  "name": "platformsh/magento2-configuration",
+  "name": "bgkavinga/magento2-configuration",
   "description": "Provides configuration to deploy a Magento 2 project on Platform.sh",
   "license": "MIT",
   "authors": [
