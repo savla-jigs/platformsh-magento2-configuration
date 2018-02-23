@@ -14,6 +14,8 @@ class Platformsh
     const MAGENTO_PRODUCTION_MODE = 'production';
     const MAGENTO_DEVELOPER_MODE = 'developer';
 
+    const MAGENTO_ROOT = __DIR__ . '/../../../';
+
     protected $debugMode = false;
 
     protected $platformReadWriteDirs = ['generated', 'app/etc'];
@@ -361,7 +363,7 @@ class Platformsh
     {
         $this->log("Updating env.php database configuration.");
 
-        $configFileName = "app/etc/env.php";
+        $configFileName = self::MAGENTO_ROOT."app/etc/env.php";
 
         $config = include $configFileName;
 
