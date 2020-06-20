@@ -53,7 +53,7 @@ class Platformsh
      */
     public function initRoutes()
     {
-        $this->log("Initializing routes.");
+        $this->log('Initializing routes.');
 
         $routes = $this->getRoutes();
 
@@ -88,13 +88,13 @@ class Platformsh
      */
     public function build()
     {
-        $this->log("Start build.");
+        $this->log('Start build.');
 
         $this->clearTemp();
 
         $this->compile();
 
-        $this->log("Copying read/write directories to temp directory.");
+        $this->log('Copying read/write directories to temp directory.');
 
         foreach ($this->platformReadWriteDirs as $dir) {
             $this->execute(sprintf('mkdir -p ./init/%s', $dir));
@@ -109,13 +109,13 @@ class Platformsh
      */
     public function compile()
     {
-        $this->log("Enable all modules.");
+        $this->log('Enable all modules.');
 
-        $this->execute("php bin/magento module:enable --all");
+        $this->execute('php bin/magento module:enable --all');
 
-        $this->log("Compiling generated files.");
+        $this->log('Compiling generated files.');
 
-        $this->execute("php bin/magento setup:di:compile");
+        $this->execute('php bin/magento setup:di:compile');
     }
 
     /**
@@ -220,7 +220,7 @@ class Platformsh
      */
     protected function installMagento()
     {
-        $this->log("File env.php does not exist. Installing Magento.");
+        $this->log('File env.php does not exist. Installing Magento.');
 
         $urlUnsecure = $this->urls['unsecure'][''];
         $urlSecure = $this->urls['secure'][''];
@@ -263,7 +263,7 @@ class Platformsh
      */
     protected function updateMagento()
     {
-        $this->log("File env.php exists. Updating configuration.");
+        $this->log('File env.php exists. Updating configuration.');
 
         $this->updateConfiguration();
 
@@ -283,7 +283,7 @@ class Platformsh
      */
     protected function updateAdminCredentials()
     {
-        $this->log("Updating admin credentials.");
+        $this->log('Updating admin credentials.');
 
         $this->executeDbQuery("update admin_user set firstname = '$this->adminFirstname', lastname = '$this->adminLastname', email = '$this->adminEmail', username = '$this->adminUsername', password='{$this->generatePassword($this->adminPassword)}' where user_id = '1';");
     }
@@ -327,7 +327,7 @@ class Platformsh
      */
     protected function clearTemp()
     {
-        $this->log("Clearing temporary directory.");
+        $this->log('Clearing temporary directory.');
 
         $this->execute('rm -rf ../init/*');
     }
@@ -337,10 +337,10 @@ class Platformsh
      */
     protected function setupUpgrade()
     {
-        $this->log("Running setup upgrade.");
+        $this->log('Running setup upgrade.');
 
         $this->execute(
-            "cd bin/; /usr/bin/php ./magento setup:upgrade --keep-generated"
+            'cd bin/; /usr/bin/php ./magento setup:upgrade --keep-generated'
         );
     }
 
@@ -349,10 +349,10 @@ class Platformsh
      */
     protected function clearCache()
     {
-        $this->log("Clearing application cache.");
+        $this->log('Clearing application cache.');
 
         $this->execute(
-            "cd bin/; /usr/bin/php ./magento cache:flush"
+            'cd bin/; /usr/bin/php ./magento cache:flush'
         );
     }
 
@@ -361,9 +361,9 @@ class Platformsh
      */
     protected function updateConfiguration()
     {
-        $this->log("Updating env.php database configuration.");
+        $this->log('Updating env.php database configuration.');
 
-        $configFileName = self::MAGENTO_ROOT."app/etc/env.php";
+        $configFileName = self::MAGENTO_ROOT.'app/etc/env.php';
 
         $config = include $configFileName;
 
@@ -495,7 +495,7 @@ class Platformsh
     protected function disableGoogleAnalytics()
     {
         if (!$this->isMasterBranch()) {
-            $this->log("Disabling Google Analytics");
+            $this->log('Disabling Google Analytics');
             $this->executeDbQuery("update core_config_data set value = 0 where path = 'google/analytics/active';");
         }
     }
@@ -521,7 +521,7 @@ class Platformsh
         $desiredApplicationMode = ($this->desiredApplicationMode) ? $this->desiredApplicationMode : self::MAGENTO_PRODUCTION_MODE;
 
         $this->log("Set Magento application to '$desiredApplicationMode' mode");
-        $this->log("Changing application mode.");
+        $this->log('Changing application mode.');
         $this->execute("cd bin/; /usr/bin/php ./magento deploy:mode:set $desiredApplicationMode --skip-compilation");
         if ($desiredApplicationMode == self::MAGENTO_DEVELOPER_MODE) {
             $locales = '';
@@ -531,7 +531,7 @@ class Platformsh
                 array_shift($locales);
                 $locales = implode(' ', $locales);
             }
-            $logMessage = $locales ? "Generating static content for locales $locales." : "Generating static content.";
+            $logMessage = $locales ? "Generating static content for locales $locales." : 'Generating static content.';
             $this->log($logMessage);
             $this->execute("cd bin/; /usr/bin/php ./magento setup:static-content:deploy $locales");
         }
